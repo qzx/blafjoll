@@ -3,7 +3,10 @@ name: Run Bláfjöll Script and Update File
 on:
   schedule:
     # Runs every hour; adjust the cron schedule as needed
-    - cron:  '*/30 * * * *'
+    - cron: '*/30 * * * *'
+  push:
+    branches:
+      - main
   workflow_dispatch:
 
 jobs:
