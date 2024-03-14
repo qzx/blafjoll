@@ -1,0 +1,40 @@
+name: Run Bláfjöll Script and Update File
+
+on:
+  schedule:
+    # Runs every hour; adjust the cron schedule as needed
+    - cron:  '*/30 * * * *'
+  workflow_dispatch:
+
+jobs:
+  run-script:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout the repo
+      uses: actions/checkout@v2
+      
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.x'
+        
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+
+    - name: Run the script
+      env:
+        NOTIFIER: 'https://www.notifymydevice.com/push'
+        SKIDASVAEDI: 'https://skidasvaedi.is/'
+        API_KEY: ${{ secrets.API_KEY }}
+      run: python blafjoll.py
+      
+    - name: Commit and push if old.txt changed
+      run: |
+        git config --global user.email "action@github.com"
+        git config --global user.name "GitHub Action"
+        git add old.txt
+        git commit -m "Update old.txt with new content" || echo "No changes to commit"
+        git push
+
