@@ -1,4 +1,6 @@
 name: Run Bláfjöll Script and Update File
+permissions:
+  contents: write
 
 on:
   schedule:
