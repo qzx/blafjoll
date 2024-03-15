@@ -34,21 +34,21 @@ def check_content_and_notify():
 
         # Compare the fetched content with the OLD_TEXT
         old_text = get_old_text()
-        if current_text != old_text:
-            # If different, send a notification
-            data = {
-                "ApiKey": API_KEY,
-                "PushTitle": notification_title,
-                "PushText": current_text,
-            }
-            headers = {'Content-Type': 'application/json'}
-            r = requests.post(NOTIFIER, data=json.dumps(data), headers=headers)
+        if current_text != old_text: #
+            if len(current_text) > 1:
+                data = {
+                    "ApiKey": API_KEY,
+                    "PushTitle": notification_title,
+                    "PushText": current_text,
+                }
+                headers = {'Content-Type': 'application/json'}
+                r = requests.post(NOTIFIER, data=json.dumps(data), headers=headers)
 
-            if r.status_code == 200:
-                print('Notification sent!')
-                save_new_text(current_text)
-            else:
-                print('Error while sending notification!')
+                if r.status_code == 200:
+                    print('Notification sent!')
+                else:
+                    print('Error while sending notification!')
+            save_new_text(current_text)
         else:
             print('No change detected.')
     else:
